@@ -27,6 +27,7 @@
                 <source_extension>.cc</source_extension>
             </source_extensions>
             <source_paths>
+                <source_path>include</source_path>
                 <source_path>src</source_path>
             </source_paths>
             <status>enabled</status>
