@@ -13,22 +13,19 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  event.respondWith(
-    caches.match(request).then((cached) => {
-      if (cached) return cached;
+  event.respondWith((async () => {
+    const cached = await caches.match(request);
+    if (cached) return cached;
 
-      return fetch(request)
-        .then((response) => {
-          if (response && response.ok) {
-            const responseToCache = response.clone();
-            return caches
-              .open('wallet-core-wasm-cache')
-              .then((cache) => cache.put(request, responseToCache))
-              .then(() => response);
-          }
-          return response;
-        })
-        .catch(() => new Response('Offline', { status: 504, statusText: 'Offline' }));
-    })
-  );
+    try {
+      const response = await fetch(request);
+      if (response && response.ok) {
+        const cache = await caches.open('wallet-core-wasm-cache');
+        await cache.put(request, response.clone());
+      }
+      return response;
+    } catch (error) {
+      return new Response('Offline', { status: 503, statusText: 'Offline' });
+    }
+  })());
 });
