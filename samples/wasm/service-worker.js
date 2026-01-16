@@ -1,3 +1,5 @@
+const CACHE_NAME = 'wallet-core-wasm-cache';
+
 self.addEventListener('install', (event) => {
   event.waitUntil(self.skipWaiting());
 });
@@ -19,8 +21,8 @@ self.addEventListener('fetch', (event) => {
 
     try {
       const response = await fetch(request);
-      if (response && response.ok) {
-        const cache = await caches.open('wallet-core-wasm-cache');
+      if (response && response.status < 400) {
+        const cache = await caches.open(CACHE_NAME);
         await cache.put(request, response.clone());
       }
       return response;
