@@ -25,6 +25,7 @@
                 <source_extension>.cpp</source_extension>
                 <source_extension>.cxx</source_extension>
                 <source_extension>.cc</source_extension>
+                <source_extension>.html</source_extension>
             </source_extensions>
             <source_paths>
                 <source_path>src</source_path>
