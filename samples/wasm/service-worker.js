@@ -21,7 +21,7 @@ self.addEventListener('fetch', (event) => {
 
     try {
       const response = await fetch(request);
-      if (response && (response.ok || (response.status >= 300 && response.status < 400))) {
+      if (response && response.ok) {
         const cache = await caches.open(CACHE_NAME);
         await cache.put(request, response.clone());
       }
