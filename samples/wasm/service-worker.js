@@ -14,18 +14,18 @@ self.addEventListener('fetch', (event) => {
   }
 
   event.respondWith(
-    caches.match(request).then((cached) => {
-      const fetchPromise = fetch(request)
+    caches.match(request).then((cached) =>
+      fetch(request)
         .then((response) => {
           if (response && response.ok) {
             const responseToCache = response.clone();
-            caches.open('wallet-core-wasm-cache').then((cache) => cache.put(request, responseToCache));
+            event.waitUntil(
+              caches.open('wallet-core-wasm-cache').then((cache) => cache.put(request, responseToCache))
+            );
           }
           return response;
         })
-        .catch(() => cached || Response.error());
-
-      return cached || fetchPromise;
-    })
+        .catch(() => cached || new Response('Offline', { status: 504, statusText: 'Offline' }))
+    )
   );
 });
